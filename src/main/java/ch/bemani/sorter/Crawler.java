@@ -27,13 +27,30 @@ public class Crawler {
 
 	public List<SongInfo> crawl(String url, String game, boolean withDownload)
 			throws MalformedURLException, IOException, URISyntaxException {
+		
 		ConnectionManager connManager = new ConnectionManager(url);
 
-		List<String> pageHTML = connManager.connectAndRead();
+		List<SongInfo> songs = new ArrayList<>();
+		
+		String nextPage = url; 
+		
+		int i=0;
+		
+		do {
+			i++;
+			System.out.println("Parsing page "+i+" for "+game);
+			
+			connManager.changeUrl(nextPage);
+			List<String> pageHTML = connManager.connectAndRead();
+			
+			songs.addAll(pageHTML.stream().map(HTMLParser::findSong).filter(Objects::nonNull)
+					.collect(Collectors.toList()));
+			
+			nextPage = HTMLParser.nextPage(pageHTML);
+						
+		} while(nextPage != null);
 
-		List<SongInfo> songs = pageHTML.stream().map(HTMLParser::findSong).filter(Objects::nonNull)
-				.collect(Collectors.toList());
-
+		
 		System.out.println("Parsed " + songs.size() + " songs...");
 
 		if (withDownload) {

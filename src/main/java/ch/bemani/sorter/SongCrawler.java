@@ -11,7 +11,7 @@ import java.util.List;
 public class SongCrawler {
 
 	private static final String DDR_SONG_LIST_URL = "/DanceDanceRevolution_WORLD_Full_Song_List";
-	private static final String IIDX_SONG_LIST_URL = "/DanceDanceRevolution_WORLD_Full_Song_List";
+	private static final String IIDX_SONG_LIST_URL = "/Beatmania_IIDX_32_Pinky_Crush_full_song_list";
 	private static final String SDVX_SONG_LIST_URL = "/DanceDanceRevolution_WORLD_Full_Song_List";
 	private static final String POPN_SONG_LIST_URL = "/DanceDanceRevolution_WORLD_Full_Song_List";
 
@@ -43,7 +43,7 @@ public class SongCrawler {
 		Crawler crawler = new Crawler();
 		LocalDateTime dtStartGlobal = LocalDateTime.now();
 		
-		List<SongInfo> crawledSongs = crawler.crawl(url, game, false);
+		List<SongInfo> crawledSongs = crawler.crawl(url, game, withDownload);
 		crawledSongs.forEach(s -> s.addGame(game));
 		
 		LocalDateTime dtEndGlobal = LocalDateTime.now();
