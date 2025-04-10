@@ -12,6 +12,10 @@ public class HTMLParser {
 
 	private static final Pattern songLinePattern = Pattern
 			.compile(".*<li><a href=\\\"([\\/\\w_()]+)\\\" title=\\\"([\\/\\w_()\\s]+)\\\".+");
+	
+	private static final Pattern songLinePattern2 = Pattern
+			.compile("<td><a href=\\\"([\\/\\w]+)\\\".+\\\">(.+)</a>.+");
+	
 	private static final Pattern jacketLinePattern = Pattern
 			.compile(".+<a href=\\\"(.+)\\\" class=\\\"internal\\\" title=\\\"Enlarge\\\">.+jacket.+");
 	private static final Pattern imagePattern = Pattern
@@ -27,6 +31,11 @@ public class HTMLParser {
 		Matcher matcher = songLinePattern.matcher(htmlLine);
 		if (matcher.matches()) {
 			return new SongInfo(matcher.group(2), matcher.group(1));
+		}
+		
+		matcher = songLinePattern2.matcher(htmlLine);
+		if (matcher.matches()) {
+			return new SongInfo(matcher.group(2), matcher.group(1),true);
 		}
 
 		return null;
@@ -48,11 +57,12 @@ public class HTMLParser {
 			List<String> jacketPageHTML = connManager.connectAndRead();
 
 			String realJacket = jacketPageHTML.stream().map(HTMLParser::findLargeJacket).filter(Objects::nonNull)
-					.findFirst().orElseThrow(() -> new CrawlerException());
+					.findFirst().orElseThrow(() -> new CrawlerException("No matching pattern for jacket"));
 
 			songInfo.setJacketUrl(realJacket);
 
 		} catch (IOException | URISyntaxException | CrawlerException e) {
+			System.err.println(e.getMessage());
 			throw e;
 		}
 	}

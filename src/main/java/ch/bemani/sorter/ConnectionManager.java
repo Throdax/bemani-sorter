@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 
 public class ConnectionManager {
 
-	private static final String baseURL = "https://remywiki.com";
+	public static final String baseURL = "https://remywiki.com";
 	private String url;
 
 	public ConnectionManager(String url) {

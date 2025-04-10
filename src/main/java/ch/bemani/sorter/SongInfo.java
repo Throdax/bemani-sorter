@@ -11,12 +11,21 @@ public class SongInfo {
 	private String title;
 	private String jacketUrl;
 	private List<String> games;
+	private boolean noJacket;
+	private boolean matchedOnPattern2;
 	
 	
 	public SongInfo(String title, String jacketUrl) {
 		this.title = title;
 		this.jacketUrl = jacketUrl;
+		noJacket = false;
+		matchedOnPattern2 = false;
 		games = new ArrayList<>();
+	}
+	
+	public SongInfo(String title, String jacketUrl, boolean matchedOnPattern2) {
+		this(title,jacketUrl);
+		this.matchedOnPattern2 = matchedOnPattern2;
 	}
 
 	public String getTitle() {
@@ -39,7 +48,10 @@ public class SongInfo {
 
 
 	public String getTitleForFile() {
-		return title.replaceAll("[<>:\"\\/\\|?*]", "_");
+		if(noJacket) {
+			return "konami";
+		}
+		return title.replaceAll("[<>:\"\\/\\|?* #\\[\\]]", "_");
 	}
 
 
@@ -66,6 +78,22 @@ public class SongInfo {
 			return false;
 		SongInfo other = (SongInfo) obj;
 		return Objects.equals(title, other.title);
+	}
+
+	public boolean isNoJacket() {
+		return noJacket;
+	}
+
+	public void setNoJacket(boolean noJacket) {
+		this.noJacket = noJacket;
+	}
+
+	public boolean isMatchedOnPattern2() {
+		return matchedOnPattern2;
+	}
+
+	public void setMatchedOnPattern2(boolean matchedOnPattern2) {
+		this.matchedOnPattern2 = matchedOnPattern2;
 	}
 	
 }
